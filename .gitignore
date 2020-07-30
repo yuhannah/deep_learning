@@ -1,7 +1,14 @@
 .idea
-events.out.tfevents.*
-.ipynb_checkpoints
+*.h5
+*.mat
+*.png
+*.jpg
 *.pyc
+
+events.out.tfevents.*
+
+
+.ipynb_checkpoints
 *.iml
 tensorflow-rnn-tutorial/tutorial/outputdir
 tensorflow-rnn-tutorial/tutorial/checkpoints
