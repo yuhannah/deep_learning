@@ -74,7 +74,7 @@ def triplet_loss(y_true, y_pred, alpha=0.2):
 
 
 print("测试triplet_loss")
-with tf.compat.v1.Session() as test:
+with tf.Session() as test:
     tf.set_random_seed(1)
     y_true = (None, None, None)
     y_pred = (tf.random_normal([3, 128], mean=6, stddev=0.1, seed=1),

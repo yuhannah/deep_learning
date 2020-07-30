@@ -436,8 +436,6 @@ from tensorflow.python.framework import ops
 import class4.cnn_utils
 import class2.tf_utils
 
-tf.compat.v1.disable_eager_execution()
-
 # %matplotlib inline
 np.random.seed(1)
 
@@ -476,8 +474,8 @@ def create_placeholders(n_H0, n_W0, n_C0, n_y):
            X - 输入数据的占位符，维度为[None, n_H0, n_W0, n_C0]，类型为"float"
            Y - 输入数据的标签的占位符，维度为[None, n_y]，维度为"float"
     """
-    X = tf.compat.v1.placeholder(tf.float32, [None, n_H0, n_W0, n_C0])
-    Y = tf.compat.v1.placeholder(tf.float32, [None, n_y])
+    X = tf.placeholder(tf.float32, [None, n_H0, n_W0, n_C0])
+    Y = tf.placeholder(tf.float32, [None, n_y])
 
     return X, Y
 
@@ -496,10 +494,10 @@ def initialize_parameters():
        返回：
            包含了tensor类型的W1、W2的字典
     """
-    tf.compat.v1.set_random_seed(1)
+    tf.set_random_seed(1)
 
-    W1 = tf.compat.v1.get_variable("W1", [4, 4, 3, 8], initializer=tf.contrib.layers.xavier_initializer(seed=0))
-    W2 = tf.compat.v1.get_variable("W2", [2, 2, 8, 16], initializer=tf.contrib.layers.xavier_initializer(seed=0))
+    W1 = tf.get_variable("W1", [4, 4, 3, 8], initializer=tf.contrib.layers.xavier_initializer(seed=0))
+    W2 = tf.get_variable("W2", [2, 2, 8, 16], initializer=tf.contrib.layers.xavier_initializer(seed=0))
 
     parameters = {"W1": W1,
                   "W2": W2}
@@ -508,10 +506,10 @@ def initialize_parameters():
 
 
 # print("测试initializer_parameters")
-# tf.compat.v1.reset_default_graph()
-# with tf.compat.v1.Session() as sess_test:
+# tf.reset_default_graph()
+# with tf.Session() as sess_test:
 #     parameters = initialize_parameters()
-#     init = tf.compat.v1.global_variables_initializer()
+#     init = tf.global_variables_initializer()
 #     sess_test.run(init)
 #     print("W1 = " + str(parameters["W1"].eval()[1,1,1]))
 #     print("W2 = " + str(parameters["W2"].eval()[1,1,1]))
@@ -556,14 +554,14 @@ def forward_propagation(X, parameters):
 
 
 # print("测试forward_propagation")
-# tf.compat.v1.reset_default_graph()
+# tf.reset_default_graph()
 # np.random.seed(1)
-# with tf.compat.v1.Session() as sess_test:
+# with tf.Session() as sess_test:
 #     X,Y = create_placeholders(64,64,3,6)
 #     parameters = initialize_parameters()
 #     Z3 = forward_propagation(X,parameters)
 #
-#     init = tf.compat.v1.global_variables_initializer()
+#     init = tf.global_variables_initializer()
 #     sess_test.run(init)
 #
 #     a =sess_test.run(Z3,{X:np.random.randn(2,64,64,3),Y:np.random.randn(2,6)})
@@ -588,15 +586,15 @@ def compute_cost(Z3, Y):
 
 
 # print("测试compute_cost")
-# tf.compat.v1.reset_default_graph()
-# with tf.compat.v1.Session() as sess_test:
+# tf.reset_default_graph()
+# with tf.Session() as sess_test:
 #     np.random.seed(1)
 #     X,Y = create_placeholders(64,64,3,6)
 #     parameters = initialize_parameters()
 #     Z3 = forward_propagation(X,parameters)
 #     cost = compute_cost(Z3,Y)
 #
-#     init = tf.compat.v1.global_variables_initializer()
+#     init = tf.global_variables_initializer()
 #     sess_test.run(init)
 #     a = sess_test.run(cost,{X:np.random.randn(4,64,64,3),Y:np.random.randn(4,6)})
 #     print("cost = " + str(a))
@@ -641,11 +639,11 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate=0.009, num_epochs=100,
     # 计算成本
     cost = compute_cost(Z3, Y)
     # 反向传播，由于框架已经实现了反向传播，我们只需要选择一个优化器就行了
-    optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
     # 全局初始化所有变量
-    init = tf.compat.v1.global_variables_initializer()
+    init = tf.global_variables_initializer()
     # 开始运行
-    with tf.compat.v1.Session() as sess:
+    with tf.Session() as sess:
         # 初始化参数
         sess.run(init)
         # 开始遍历数据集

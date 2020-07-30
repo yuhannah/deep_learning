@@ -49,17 +49,13 @@ def yolo_filter_boxes(box_confidence, boxes, box_class_probs, threshold=0.6):
 
     # 对scores, boxes 以及 classes使用掩码
     scores = tf.boolean_mask(box_class_scores, filtering_mask)
-    s = np.reshape(boxes.eval(), (-1, 4))
     boxes = tf.boolean_mask(boxes, filtering_mask)
     classes = tf.boolean_mask(box_classes, filtering_mask)
-
-    d = boxes.eval()
-    m = np.reshape(filtering_mask.eval(), (-1, 1))
 
     return scores, boxes, classes
 
 
-with tf.compat.v1.Session() as test_a:
+with tf.Session() as test_a:
     box_confidence = tf.random_normal([19, 19, 5, 1], mean=1, stddev=4, seed=1)
     boxes = tf.random_normal([19, 19, 5, 4], mean=1, stddev=4, seed=1)
     box_class_probs = tf.random_normal([19, 19, 5, 80], mean=1, stddev=4, seed=1)
@@ -150,7 +146,7 @@ def yolo_non_max_suppression(scores, boxes, classes, max_boxes=10, iou_threshold
 
 
 print("测试yolo_non_max_suppression")
-with tf.compat.v1.Session() as test_b:
+with tf.Session() as test_b:
     scores = tf.random_normal([54, ], mean=1, stddev=4, seed=1)
     boxes = tf.random_normal([54, 4], mean=1, stddev=4, seed=1)
     classes = tf.random_normal([54, ], mean=1, stddev=4, seed=1)
@@ -207,7 +203,7 @@ def yolo_eval(yolo_outputs, image_shape=(720., 1280.), max_boxes=10, score_thres
 
 
 print("测试yolo_eval")
-with tf.compat.v1.Session() as test_c:
+with tf.Session() as test_c:
     yolo_outputs = (tf.random_normal([19, 19, 5, 1], mean=1, stddev=4, seed=1),
                     tf.random_normal([19, 19, 5, 2], mean=1, stddev=4, seed=1),
                     tf.random_normal([19, 19, 5, 2], mean=1, stddev=4, seed=1),

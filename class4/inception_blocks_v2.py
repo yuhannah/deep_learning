@@ -7,7 +7,7 @@ from keras.layers import Conv2D, ZeroPadding2D, Activation, Input, concatenate
 from keras.models import Model
 from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-from class4.fr_utils import *
+import fr_utils
 from keras.layers.core import Lambda, Flatten, Dense
 
 
@@ -220,7 +220,7 @@ def inception_block_3b(X):
 def faceRecoModel(input_shape):
     """
     Implementation of the Inception model used for FaceNet
-    
+
     Arguments:
     input_shape -- shape of the images of the dataset
 
