@@ -2,15 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sklearn
 import sklearn.datasets
-import class2.init_utils   #第一部分，初始化
-import class2.reg_utils    #第二部分，正则化
-import class2.gc_utils     #第三部分，梯度校验
-#%matplotlib inline #如果你使用的是Jupyter Notebook，请取消注释。
-plt.rcParams['figure.figsize'] = (7.0, 4.0) # set default size of plots
+from class2.init_utils import *  # 第一部分，初始化
+from class2.reg_utils import *  # 第二部分，正则化
+from class2.gc_utils import *  # 第三部分，梯度校验
+
+# %matplotlib inline #如果你使用的是Jupyter Notebook，请取消注释。
+plt.rcParams['figure.figsize'] = (7.0, 4.0)  # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
 plt.rcParams['image.cmap'] = 'gray'
 
-train_X, train_Y, test_X, test_Y = class2.init_utils.load_dataset(is_plot=True)
+train_X, train_Y, test_X, test_Y = load_dataset(is_plot=True)
+
 
 def model(X, Y, learning_rate=0.01, num_iterations=15000, print_cost=True, initialization="he", is_polt=True):
     """
@@ -46,16 +48,16 @@ def model(X, Y, learning_rate=0.01, num_iterations=15000, print_cost=True, initi
     # 开始学习
     for i in range(0, num_iterations):
         # 前向传播
-        a3, cache = class2.init_utils.forward_propagation(X, parameters)
+        a3, cache = forward_propagation(X, parameters)
 
         # 计算成本
-        cost = class2.init_utils.compute_loss(a3, Y)
+        cost = compute_loss(a3, Y)
 
         # 反向传播
-        grads = class2.init_utils.backward_propagation(X, Y, cache)
+        grads = backward_propagation(X, Y, cache)
 
         # 更新参数
-        parameters = class2.init_utils.update_parameters(parameters, grads, learning_rate)
+        parameters = update_parameters(parameters, grads, learning_rate)
 
         # 记录成本
         if i % 1000 == 0:
@@ -74,6 +76,7 @@ def model(X, Y, learning_rate=0.01, num_iterations=15000, print_cost=True, initi
 
     # 返回学习完毕后的参数
     return (parameters, grads)
+
 
 def initialize_parameters_zeros(layers_dims):
     """
@@ -103,6 +106,7 @@ def initialize_parameters_zeros(layers_dims):
 
     return parameters
 
+
 # print("========初始化参数：为零========")
 # parameters = initialize_parameters_zeros([3,2,1])
 # print("W1 = " + str(parameters["W1"]))
@@ -113,10 +117,10 @@ def initialize_parameters_zeros(layers_dims):
 # (parameters, grads) = model(train_X, train_Y, initialization = "zeros",is_polt=True)
 #
 # print ("训练集:")
-# predictions_train = class2.init_utils.predict(train_X, train_Y, parameters)
+# predictions_train = predict(train_X, train_Y, parameters)
 # print ("测试集:")
-# predictions_test = class2.init_utils.predict(test_X, test_Y, parameters)
-#
+# predictions_test = predict(test_X, test_Y, parameters)
+
 # print("predictions_train = " + str(predictions_train))
 # print("predictions_test = " + str(predictions_test))
 #
@@ -124,7 +128,7 @@ def initialize_parameters_zeros(layers_dims):
 # axes = plt.gca()
 # axes.set_xlim([-1.5, 1.5])
 # axes.set_ylim([-1.5, 1.5])
-# class2.init_utils.plot_decision_boundary(lambda x: class2.init_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
 def initialize_parameters_random(layers_dims):
     """
@@ -153,6 +157,7 @@ def initialize_parameters_random(layers_dims):
 
     return parameters
 
+
 # print("=======初始化参数：随机大值=======")
 # parameters = initialize_parameters_random([3, 2, 1])
 # print("W1 = " + str(parameters["W1"]))
@@ -162,9 +167,9 @@ def initialize_parameters_random(layers_dims):
 #
 # (parameters, grads) = model(train_X, train_Y, initialization = "random",is_polt=True)
 # print("训练集：")
-# predictions_train = class2.init_utils.predict(train_X, train_Y, parameters)
+# predictions_train = predict(train_X, train_Y, parameters)
 # print("测试集：")
-# predictions_test = class2.init_utils.predict(test_X, test_Y, parameters)
+# predictions_test = predict(test_X, test_Y, parameters)
 #
 # print("predictions_train = " + str(predictions_train))
 # print("predictions_test = " + str(predictions_test))
@@ -173,7 +178,7 @@ def initialize_parameters_random(layers_dims):
 # axes = plt.gca()
 # axes.set_xlim([-1.5, 1.5])
 # axes.set_ylim([-1.5, 1.5])
-# class2.init_utils.plot_decision_boundary(lambda x: class2.init_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
 def initialize_parameters_he(layers_dims):
     """
@@ -200,9 +205,10 @@ def initialize_parameters_he(layers_dims):
         assert (parameters["W" + str(l)].shape == (layers_dims[l], layers_dims[l - 1]))
         assert (parameters["b" + str(l)].shape == (layers_dims[l], 1))
 
-        print(parameters["W"+str(l)].shape)
+        print(parameters["W" + str(l)].shape)
 
     return parameters
+
 
 # print("======初始化参数：抑梯度异常======")
 # parameters = initialize_parameters_he([2, 4, 1])
@@ -213,17 +219,18 @@ def initialize_parameters_he(layers_dims):
 #
 # (parameters, grads) = model(train_X, train_Y, initialization = "he",is_polt=True)
 # print("训练集:")
-# predictions_train = class2.init_utils.predict(train_X, train_Y, parameters)
+# predictions_train = predict(train_X, train_Y, parameters)
 # print("测试集:")
-# predictions_test = class2.init_utils.predict(test_X, test_Y, parameters)
+# predictions_test = predict(test_X, test_Y, parameters)
 #
 # plt.title("Model with He initialization")
 # axes = plt.gca()
 # axes.set_xlim([-1.5, 1.5])
 # axes.set_ylim([-1.5, 1.5])
-# class2.init_utils.plot_decision_boundary(lambda x: class2.init_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
-train_X, train_Y, test_X, test_Y = class2.reg_utils.load_2D_dataset(is_plot=True)
+train_X, train_Y, test_X, test_Y = load_2D_dataset(is_plot=True)
+
 
 def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plot=True, lambd=0, keep_prob=1):
     """
@@ -248,7 +255,7 @@ def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plo
     layers_dims = [X.shape[0], 10, 5, 1]
 
     # 初始化参数
-    parameters = class2.reg_utils.initialize_parameters(layers_dims)
+    parameters = initialize_parameters(layers_dims)
 
     # 开始学习
     for i in range(0, num_iterations):
@@ -256,7 +263,7 @@ def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plo
         ##是否随机删除节点
         if keep_prob == 1:
             ###不随机删除节点
-            a3, cache = class2.reg_utils.forward_propagation(X, parameters)
+            a3, cache = forward_propagation(X, parameters)
         elif keep_prob < 1:
             ###随机删除节点
             a3, cache = forward_propagation_with_dropout(X, parameters, keep_prob)
@@ -268,7 +275,7 @@ def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plo
         ## 是否使用二范数
         if lambd == 0:
             ###不使用L2正则化
-            cost = class2.reg_utils.compute_cost(a3, Y)
+            cost = compute_cost(a3, Y)
         else:
             ###使用L2正则化
             cost = compute_cost_with_regularization(a3, Y, parameters, lambd)
@@ -280,7 +287,7 @@ def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plo
         ##两个参数的使用情况
         if (lambd == 0 and keep_prob == 1):
             ### 不使用L2正则化和不使用随机删除节点
-            grads = class2.reg_utils.backward_propagation(X, Y, cache)
+            grads = backward_propagation(X, Y, cache)
         elif lambd != 0:
             ### 使用L2正则化，不使用随机删除节点
             grads = backward_propagation_with_regularization(X, Y, cache, lambd)
@@ -289,7 +296,7 @@ def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plo
             grads = backward_propagation_with_dropout(X, Y, cache, keep_prob)
 
         # 更新参数
-        parameters = class2.reg_utils.update_parameters(parameters, grads, learning_rate)
+        parameters = update_parameters(parameters, grads, learning_rate)
 
         # 记录并打印成本
         if i % 1000 == 0:
@@ -310,18 +317,19 @@ def model(X, Y, learning_rate=0.3, num_iterations=30000, print_cost=True, is_plo
     # 返回学习后的参数
     return (parameters, grads)
 
+
 # print("======不使用正则化======")
 # (parameters, grads) = model(train_X, train_Y, is_plot=True)
 # print("训练集:")
-# predictions_train = class2.reg_utils.predict(train_X, train_Y, parameters)
+# predictions_train = predict(train_X, train_Y, parameters)
 # print("测试集:")
-# predictions_test = class2.reg_utils.predict(test_X, test_Y, parameters)
+# predictions_test = predict(test_X, test_Y, parameters)
 #
 # plt.title("Model without regularization")
 # axes = plt.gca()
 # axes.set_xlim([-0.75,0.40])
 # axes.set_ylim([-0.75,0.65])
-# class2.reg_utils.plot_decision_boundary(lambda x: class2.reg_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
 def compute_cost_with_regularization(A3, Y, parameters, lambd):
     """
@@ -340,7 +348,7 @@ def compute_cost_with_regularization(A3, Y, parameters, lambd):
     W2 = parameters["W2"]
     W3 = parameters["W3"]
 
-    cross_entropy_cost = class2.reg_utils.compute_cost(A3, Y)
+    cross_entropy_cost = compute_cost(A3, Y)
 
     L2_regularization_cost = lambd * (np.sum(np.square(W1)) + np.sum(np.square(W2)) + np.sum(np.square(W3))) / (2 * m)
 
@@ -390,18 +398,21 @@ def backward_propagation_with_regularization(X, Y, cache, lambd):
 
     return gradients
 
-# print("=======使用正则化======")
-# (parameters, grads) = model(train_X, train_Y, lambd=0.7,is_plot=True)
-# print("使用正则化，训练集:")
-# predictions_train = class2.reg_utils.predict(train_X, train_Y, parameters)
-# print("使用正则化，测试集:")
-# predictions_test = class2.reg_utils.predict(test_X, test_Y, parameters)
+
+print("=======使用正则化======")
+(parameters, grads) = model(train_X, train_Y, lambd=0.7, is_plot=True)
+print("使用正则化，训练集:")
+predictions_train = predict(train_X, train_Y, parameters)
+print("使用正则化，测试集:")
+predictions_test = predict(test_X, test_Y, parameters)
+
+
 #
 # plt.title("Model with L2-regularization")
 # axes = plt.gca()
 # axes.set_xlim([-0.75,0.40])
 # axes.set_ylim([-0.75,0.65])
-# class2.reg_utils.plot_decision_boundary(lambda x: class2.reg_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
 def forward_propagation_with_dropout(X, parameters, keep_prob=0.5):
     """
@@ -433,7 +444,7 @@ def forward_propagation_with_dropout(X, parameters, keep_prob=0.5):
 
     # LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SIGMOID
     Z1 = np.dot(W1, X) + b1
-    A1 = class2.reg_utils.relu(Z1)
+    A1 = relu(Z1)
 
     # 下面的步骤1-4对应于上述的步骤1-4。
     D1 = np.random.rand(A1.shape[0], A1.shape[1])  # 步骤1：初始化矩阵D1 = np.random.rand(..., ...)
@@ -458,7 +469,7 @@ def forward_propagation_with_dropout(X, parameters, keep_prob=0.5):
     """
 
     Z2 = np.dot(W2, A1) + b2
-    A2 = class2.reg_utils.relu(Z2)
+    A2 = relu(Z2)
 
     # 下面的步骤1-4对应于上述的步骤1-4。
     D2 = np.random.rand(A2.shape[0], A2.shape[1])  # 步骤1：初始化矩阵D2 = np.random.rand(..., ...)
@@ -467,11 +478,12 @@ def forward_propagation_with_dropout(X, parameters, keep_prob=0.5):
     A2 = A2 / keep_prob  # 步骤4：缩放未舍弃的节点(不为0)的值
 
     Z3 = np.dot(W3, A2) + b3
-    A3 = class2.reg_utils.sigmoid(Z3)
+    A3 = sigmoid(Z3)
 
     cache = (Z1, D1, A1, W1, b1, Z2, D2, A2, W2, b2, Z3, A3, W3, b3)
 
     return A3, cache
+
 
 def backward_propagation_with_dropout(X, Y, cache, keep_prob):
     """
@@ -515,19 +527,20 @@ def backward_propagation_with_dropout(X, Y, cache, keep_prob):
 
     return gradients
 
+
 # print("=======使用dropout======")
 # (parameters, grads) = model(train_X, train_Y, keep_prob=0.86, learning_rate=0.3,is_plot=True)
 #
 # print("使用随机删除节点，训练集:")
-# predictions_train = class2.reg_utils.predict(train_X, train_Y, parameters)
+# predictions_train = predict(train_X, train_Y, parameters)
 # print("使用随机删除节点，测试集:")
-# predictions_test = class2.reg_utils.predict(test_X, test_Y, parameters)
+# predictions_test = predict(test_X, test_Y, parameters)
 #
 # plt.title("Model with dropout")
 # axes = plt.gca()
 # axes.set_xlim([-0.75, 0.40])
 # axes.set_ylim([-0.75, 0.65])
-# class2.reg_utils.plot_decision_boundary(lambda x: class2.reg_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
 def forward_propagation(x, theta):
     """
@@ -544,6 +557,7 @@ def forward_propagation(x, theta):
     J = np.dot(theta, x)
 
     return J
+
 
 # #测试forward_propagation
 # print("=======测试forward_propagation======")
@@ -565,6 +579,7 @@ def backward_propagation(x, theta):
     dtheta = x
 
     return dtheta
+
 
 # #测试backward_propagation
 # print("=======测试backward_propagation======")
@@ -607,6 +622,7 @@ def gradient_check(x, theta, epsilon=1e-7):
 
     return difference
 
+
 # #测试gradient_check
 # print("=======测试gradient_check======")
 # x, theta = 2, 4
@@ -641,22 +657,23 @@ def forward_propagation_n(X, Y, parameters):
 
     # LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SIGMOID
     Z1 = np.dot(W1, X) + b1
-    A1 = class2.gc_utils.relu(Z1)
+    A1 = relu(Z1)
 
     Z2 = np.dot(W2, A1) + b2
-    A2 = class2.gc_utils.relu(Z2)
+    A2 = relu(Z2)
 
     Z3 = np.dot(W3, A2) + b3
-    A3 = class2.gc_utils.sigmoid(Z3)
+    A3 = sigmoid(Z3)
 
     # 计算成本
     epsilon = 1e-5
-    logprobs = np.multiply(-np.log(A3+epsilon), Y) + np.multiply(-np.log(1 - A3+epsilon), 1 - Y)
+    logprobs = np.multiply(-np.log(A3 + epsilon), Y) + np.multiply(-np.log(1 - A3 + epsilon), 1 - Y)
     cost = (1 / m) * np.sum(logprobs)
 
     cache = (Z1, A1, W1, b1, Z2, A2, W2, b2, Z3, A3, W3, b3)
 
     return cost, cache
+
 
 def backward_propagation_n(X, Y, cache):
     """
@@ -695,6 +712,7 @@ def backward_propagation_n(X, Y, cache):
 
     return gradients
 
+
 def gradient_check_n(parameters, gradients, X, Y, epsilon=1e-7):
     """
     检查backward_propagation_n是否正确计算forward_propagation_n输出的成本梯度
@@ -710,9 +728,9 @@ def gradient_check_n(parameters, gradients, X, Y, epsilon=1e-7):
         difference - 近似梯度和后向传播梯度之间的差异
     """
     # 初始化参数
-    parameters_values, keys = class2.gc_utils.dictionary_to_vector(parameters)  # keys用不到
+    parameters_values, keys = dictionary_to_vector(parameters)  # keys用不到
     print(parameters_values.shape)
-    grad = class2.gc_utils.gradients_to_vector(gradients)
+    grad = gradients_to_vector(gradients)
     num_parameters = parameters_values.shape[0]
     J_plus = np.zeros((num_parameters, 1))
     J_minus = np.zeros((num_parameters, 1))
@@ -725,12 +743,12 @@ def gradient_check_n(parameters, gradients, X, Y, epsilon=1e-7):
         # 计算J_plus [i]。输入：“parameters_values，epsilon”。输出=“J_plus [i]”
         thetaplus = np.copy(parameters_values)  # Step 1
         thetaplus[i][0] = thetaplus[i][0] + epsilon  # Step 2
-        J_plus[i], cache = forward_propagation_n(X, Y, class2.gc_utils.vector_to_dictionary(thetaplus))  # Step 3 ，cache用不到
+        J_plus[i], cache = forward_propagation_n(X, Y, vector_to_dictionary(thetaplus))  # Step 3 ，cache用不到
 
         # 计算J_minus [i]。输入：“parameters_values，epsilon”。输出=“J_minus [i]”。
         thetaminus = np.copy(parameters_values)  # Step 1
         thetaminus[i][0] = thetaminus[i][0] - epsilon  # Step 2
-        J_minus[i], cache = forward_propagation_n(X, Y, class2.gc_utils.vector_to_dictionary(thetaminus))  # Step 3 ，cache用不到
+        J_minus[i], cache = forward_propagation_n(X, Y, vector_to_dictionary(thetaminus))  # Step 3 ，cache用不到
 
         # 计算gradapprox[i]
         gradapprox[i] = (J_plus[i] - J_minus[i]) / (2 * epsilon)

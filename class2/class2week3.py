@@ -3,7 +3,7 @@ import h5py
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.python.framework import ops
-import class2.tf_utils
+from class2.tf_utils import *
 import time
 
 # 用于1.0版本的tensorflow代码最前面
@@ -16,10 +16,10 @@ y_hat = tf.constant(36, name="y_hat")  # 定义y_hat为固定值36
 y = tf.constant(39, name="y")  # 定义y为固定值39
 loss = tf.Variable((y - y_hat) ** 2, name="loss")  # 为损失函数创建一个变量
 
-init = tf.compat.v1.global_variables_initializer()  # 运行之后的初始化(session.run(init))
+init = tf.global_variables_initializer()  # 运行之后的初始化(session.run(init))
 
 # 损失变量将被初始化并准备计算
-with tf.compat.v1.Session() as session:  # 创建一个session并打印输出
+with tf.Session() as session:  # 创建一个session并打印输出
     session.run(init)  # 初始化变量
     print(session.run(loss))  # 打印损失值
 
@@ -29,12 +29,12 @@ b = tf.constant(10)
 c = tf.multiply(a, b)
 print(c)
 
-sess = tf.compat.v1.Session()
+sess = tf.Session()
 print(sess.run(c))
 
 # 利用feed_dict来改变x的值
 print("=======测试占位符=======")
-x = tf.compat.v1.placeholder(tf.int64, name="x")
+x = tf.placeholder(tf.int64, name="x")
 print(sess.run(2 * x, feed_dict={x: 3}))
 sess.close()
 
@@ -60,7 +60,7 @@ def linear_function():
     # Y = tf.matmul(W,X) + b #也可以以写成这样子
 
     # 创建一个session并运行它
-    sess = tf.compat.v1.Session()
+    sess = tf.Session()
     result = sess.run(Y)
 
     # session使用完毕，关闭它
@@ -86,13 +86,13 @@ def sigmoid(z):
     """
 
     # 创建一个占位符x，名字叫“x”
-    x = tf.compat.v1.placeholder(tf.float32, name="x")
+    x = tf.placeholder(tf.float32, name="x")
 
     # 计算sigmoid(z)
     sigmoid = tf.sigmoid(x)
 
     # 创建一个会话，使用方法二
-    with tf.compat.v1.Session() as sess:
+    with tf.Session() as sess:
         result = sess.run(sigmoid, feed_dict={x: z})
 
     return result
@@ -124,7 +124,7 @@ def one_hot_matrix(lables, C):
     one_hot_matrix = tf.one_hot(indices=lables, depth=C, axis=0)
 
     # 创建一个session
-    sess = tf.compat.v1.Session()
+    sess = tf.Session()
 
     # 运行session
     one_hot = sess.run(one_hot_matrix)
@@ -155,7 +155,7 @@ def ones(shape):
     ones = tf.ones(shape)
 
     # 创建会话
-    sess = tf.compat.v1.Session()
+    sess = tf.Session()
 
     # 运行会话
     ones = sess.run(ones)
@@ -170,7 +170,7 @@ def ones(shape):
 # print ("ones = " + str(ones([3])))
 
 print("=======加载数据集=======")
-X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = class2.tf_utils.load_dataset()
+X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()
 print(X_train_orig.shape)  # (1080, 64, 64, 3)
 print(Y_train_orig.shape)  # (1, 1080)
 # index = 11
@@ -187,8 +187,8 @@ X_train = X_train_flatten / 255
 X_test = X_test_flatten / 255
 
 # 转换为独热矩阵
-Y_train = class2.tf_utils.convert_to_one_hot(Y_train_orig, 6)
-Y_test = class2.tf_utils.convert_to_one_hot(Y_test_orig, 6)
+Y_train = convert_to_one_hot(Y_train_orig, 6)
+Y_test = convert_to_one_hot(Y_test_orig, 6)
 
 
 # print("训练集样本数 = " + str(X_train.shape[1]))
@@ -216,8 +216,8 @@ def create_placeholders(n_x, n_y):
 
     """
     with tf.name_scope('input'):
-        X = tf.compat.v1.placeholder(tf.float32, [n_x, None], name="X")
-        Y = tf.compat.v1.placeholder(tf.float32, [n_y, None], name="Y")
+        X = tf.placeholder(tf.float32, [n_x, None], name="X")
+        Y = tf.placeholder(tf.float32, [n_y, None], name="Y")
 
         with tf.name_scope('input_reshape'):
             image_shaped_input = tf.reshape(X, [-1, 64, 64, 3])
@@ -259,28 +259,28 @@ def initialize_parameters():
 
     """
 
-    tf.compat.v1.set_random_seed(1)  # 指定随机种子
+    tf.set_random_seed(1)  # 指定随机种子
 
     with tf.name_scope('layer1'):
         with tf.name_scope('weight'):
-            W1 = tf.compat.v1.get_variable("W1", [25, 12288], initializer=tf.contrib.layers.xavier_initializer(seed=1))
+            W1 = tf.get_variable("W1", [25, 12288], initializer=tf.contrib.layers.xavier_initializer(seed=1))
             variable_summaries(W1)
         with tf.name_scope('biases'):
-            b1 = tf.compat.v1.get_variable("b1", [25, 1], initializer=tf.zeros_initializer())
+            b1 = tf.get_variable("b1", [25, 1], initializer=tf.zeros_initializer())
             variable_summaries(b1)
     with tf.name_scope('layer2'):
         with tf.name_scope('weight'):
-            W2 = tf.compat.v1.get_variable("W2", [12, 25], initializer=tf.contrib.layers.xavier_initializer(seed=1))
+            W2 = tf.get_variable("W2", [12, 25], initializer=tf.contrib.layers.xavier_initializer(seed=1))
             variable_summaries(W2)
         with tf.name_scope('biases'):
-            b2 = tf.compat.v1.get_variable("b2", [12, 1], initializer=tf.zeros_initializer())
+            b2 = tf.get_variable("b2", [12, 1], initializer=tf.zeros_initializer())
             variable_summaries(b2)
     with tf.name_scope('layer3'):
         with tf.name_scope('weight'):
-            W3 = tf.compat.v1.get_variable("W3", [6, 12], initializer=tf.contrib.layers.xavier_initializer(seed=1))
+            W3 = tf.get_variable("W3", [6, 12], initializer=tf.contrib.layers.xavier_initializer(seed=1))
             variable_summaries(W3)
         with tf.name_scope('biases'):
-            b3 = tf.compat.v1.get_variable("b3", [6, 1], initializer=tf.zeros_initializer())
+            b3 = tf.get_variable("b3", [6, 1], initializer=tf.zeros_initializer())
             variable_summaries(b3)
 
     parameters = {"W1": W1,
@@ -294,8 +294,8 @@ def initialize_parameters():
 
 
 # print("=======测试初始化=======")
-# tf.compat.v1.reset_default_graph()  # 用于清除默认图形堆栈并重置全局默认图形。
-# with tf.compat.v1.Session() as sess:
+# tf.reset_default_graph()  # 用于清除默认图形堆栈并重置全局默认图形。
+# with tf.Session() as sess:
 #     parameters = initialize_parameters()
 #     print("W1 = " + str(parameters["W1"]))
 #     print("b1 = " + str(parameters["b1"]))
@@ -345,8 +345,8 @@ def forward_propagation(X, parameters):
 
 
 # print("=======测试向前传播=======")
-# tf.compat.v1.reset_default_graph() #用于清除默认图形堆栈并重置全局默认图形。
-# with tf.compat.v1.Session() as sess:
+# tf.reset_default_graph() #用于清除默认图形堆栈并重置全局默认图形。
+# with tf.Session() as sess:
 #     X,Y = create_placeholders(12288,6)
 #     parameters = initialize_parameters()
 #     Z3 = forward_propagation(X,parameters)
@@ -371,13 +371,13 @@ def compute_cost(Z3, Y):
 
     with tf.name_scope('cross_entropy'):
         cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
-        tf.summary.scalar('cross_entropy',cost)
+        tf.summary.scalar('cross_entropy', cost)
     return cost
 
 
 # print("=======测试代价函数=======")
-# tf.compat.v1.reset_default_graph()
-# with tf.compat.v1.Session() as sess:
+# tf.reset_default_graph()
+# with tf.Session() as sess:
 #     X,Y = create_placeholders(12288,6)
 #     parameters = initialize_parameters()
 #     Z3 = forward_propagation(X,parameters)
@@ -407,7 +407,7 @@ def model(X_train, Y_train, X_test, Y_test,
 
     """
     ops.reset_default_graph()  # 能够重新运行模型而不覆盖tf变量
-    tf.compat.v1.set_random_seed(1)
+    tf.set_random_seed(1)
     seed = 3
     (n_x, m) = X_train.shape  # 获取输入节点数量和样本数
     n_y = Y_train.shape[0]  # 获取输出节点数量
@@ -427,20 +427,17 @@ def model(X_train, Y_train, X_test, Y_test,
 
     # 反向传播，使用Adam优化
     with tf.name_scope('train'):
-        optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
-
-
+        optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 
     # 初始化所有的变量
-    init = tf.compat.v1.global_variables_initializer()
+    init = tf.global_variables_initializer()
 
     # 开始会话并计算
-    with tf.compat.v1.Session() as sess:
+    with tf.Session() as sess:
 
         merged = tf.summary.merge_all()
         train_writer = tf.summary.FileWriter("./log/train", sess.graph)
         test_writer = tf.summary.FileWriter("./log/test", sess.graph)
-
 
         # 初始化
         sess.run(init)
@@ -451,7 +448,7 @@ def model(X_train, Y_train, X_test, Y_test,
             epoch_cost = 0  # 每代的成本
             num_minibatches = int(m / minibatch_size)  # minibatch的总数量
             seed = seed + 1
-            minibatches = class2.tf_utils.random_mini_batches(X_train, Y_train, minibatch_size, seed)
+            minibatches = random_mini_batches(X_train, Y_train, minibatch_size, seed)
 
             for minibatch in minibatches:
                 # 选择一个minibatch
@@ -500,7 +497,6 @@ def model(X_train, Y_train, X_test, Y_test,
 
         print("训练集的准确率：", accuracy.eval({X: X_train, Y: Y_train}))
         print("测试集的准确率: ", accuracy.eval({X: X_test, Y: Y_test}))
-
 
         train_writer.close()
         test_writer.close()

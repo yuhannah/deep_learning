@@ -9,6 +9,7 @@ import numpy as np
 import scipy.misc
 from skimage import io
 
+
 def loss(sess, model):
     """
     定义模型的损失函数
@@ -84,10 +85,8 @@ def gram(x, size, deep):
 
 
 def train():
-
     vgg = scipy.io.loadmat(VGG_MODEL_PATH)
     vgg_layers = vgg['layers'][0]
-
 
     # 创建一个模型
     model = Model(CONTENT_IMAGE, STYLE_IMAGE)
@@ -119,7 +118,7 @@ def train():
                 # 将像素值限定在0-255，并转为整型
                 img = np.clip(img, 0, 255).astype(np.uint8)
                 # 保存图片
-                io.imsave('{}-{}.jpg'.format(OUTPUT_IMAGE,step), img)
+                io.imsave('{}-{}.jpg'.format(OUTPUT_IMAGE, step), img)
         # 保存最终训练结果
         img = sess.run(model.net['input'])
         img += IMAGE_MEAN_VALUE

@@ -17,7 +17,7 @@ IMAGE_WIDTH = 400
 # 图片高度
 IMAGE_HEIGHT = 300
 # 定义计算内容损失的vgg层名称及对应权重的列表
-CONTENT_LOSS_LAYERS = [('conv4_2', 0.5),('conv5_2',0.5)]
+CONTENT_LOSS_LAYERS = [('conv4_2', 0.5), ('conv5_2', 0.5)]
 # 定义计算风格损失的vgg层名称及对应权重的列表
 STYLE_LOSS_LAYERS = [('conv1_1', 0.2), ('conv2_1', 0.2), ('conv3_1', 0.2), ('conv4_1', 0.2), ('conv5_1', 0.2)]
 # 噪音比率

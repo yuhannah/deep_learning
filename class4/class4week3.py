@@ -15,7 +15,7 @@ from keras.models import load_model, Model
 
 from class4.yad2k.models.keras_yolo import yolo_head, yolo_boxes_to_corners, preprocess_true_boxes, yolo_loss, yolo_body
 
-import class4.yolo_utils
+from class4.yolo_utils import *
 
 
 def yolo_filter_boxes(box_confidence, boxes, box_class_probs, threshold=0.6):
@@ -198,7 +198,7 @@ def yolo_eval(yolo_outputs, image_shape=(720., 1280.), max_boxes=10, score_thres
     scores, boxes, classes = yolo_filter_boxes(box_confidence, boxes, box_class_probs, score_threshold)
 
     # 缩放锚框，以适应原始图像
-    boxes = class4.yolo_utils.scale_boxes(boxes, image_shape)
+    boxes = scale_boxes(boxes, image_shape)
 
     # 使用非最大值抑制
     scores, boxes, classes = yolo_non_max_suppression(scores, boxes, classes, max_boxes, iou_threshold)
@@ -225,9 +225,9 @@ with tf.compat.v1.Session() as test_c:
 
 print("测试模型")
 sess = K.get_session()
-class_names = class4.yolo_utils.read_classes("model_data/coco_classes.txt")
+class_names = read_classes("model_data/coco_classes.txt")
 print("class_names = ", class_names)
-anchors = class4.yolo_utils.read_anchors("model_data/yolo_anchors.txt")
+anchors = read_anchors("model_data/yolo_anchors.txt")
 print("anchors = ", anchors)
 image_shape = (720., 1280.)
 yolo_model = load_model("model_data/yolov2.h5")
@@ -249,7 +249,7 @@ def predict(sess, image_file, is_show_info=True, is_plot=True):
         out_classes - tensor类型，维度为(None,)，锚框的预测的分类索引。
     """
     # 图像预处理
-    image, image_data = class4.yolo_utils.preprocess_image("images/" + image_file, model_image_size=(608, 608))
+    image, image_data = preprocess_image("images/" + image_file, model_image_size=(608, 608))
 
     # 运行会话并在feed_dict中选择正确的占位符.
     out_scores, out_boxes, out_classes = sess.run([scores, boxes, classes],
@@ -260,10 +260,10 @@ def predict(sess, image_file, is_show_info=True, is_plot=True):
         print("在" + str(image_file) + "中找到了" + str(len(out_boxes)) + "个锚框。")
 
     # 指定要绘制的边界框的颜色
-    colors = class4.yolo_utils.generate_colors(class_names)
+    colors = generate_colors(class_names)
 
     # 在图中绘制边界框
-    class4.yolo_utils.draw_boxes(image, out_scores, out_boxes, out_classes, class_names, colors)
+    draw_boxes(image, out_scores, out_boxes, out_classes, class_names, colors)
 
     # 保存已经绘制了边界框的图
     image.save(os.path.join("out", image_file), quality=100)

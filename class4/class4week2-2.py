@@ -22,7 +22,7 @@ import keras.backend as K
 K.set_image_data_format('channels_last')
 K.set_learning_phase(1)
 
-import class4.resnets_utils
+from class4.resnets_utils import *
 
 
 def identity_block(X, f, filters, stage, block):
@@ -254,13 +254,13 @@ print("测试ResNet50")
 model = ResNet50(input_shape=(64, 64, 3), classes=6)
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
-X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = class4.resnets_utils.load_dataset()
+X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()
 # Normalize image vectors
 X_train = X_train_orig / 255
 X_test = X_test_orig / 255
 # Convert training and test labels to one hot matrices
-Y_train = class4.resnets_utils.convert_to_one_hot(Y_train_orig, 6).T
-Y_test = class4.resnets_utils.convert_to_one_hot(Y_test_orig, 6).T
+Y_train = convert_to_one_hot(Y_train_orig, 6).T
+Y_test = convert_to_one_hot(Y_test_orig, 6).T
 
 # print("数据预处理")
 # print("number of training examples = " + str(X_train.shape[0]))

@@ -5,13 +5,14 @@ import math
 import sklearn
 import sklearn.datasets
 
-import class2.opt_utils #参见数据包或者在本文底部copy
-import class2.testCase  #参见数据包或者在本文底部copy
+from class2.opt_utils import *  # 参见数据包或者在本文底部copy
+from class2.testCase import *  # 参见数据包或者在本文底部copy
 
-#%matplotlib inline #如果你用的是Jupyter Notebook请取消注释
-plt.rcParams['figure.figsize'] = (7.0, 4.0) # set default size of plots
+# %matplotlib inline #如果你用的是Jupyter Notebook请取消注释
+plt.rcParams['figure.figsize'] = (7.0, 4.0)  # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
 plt.rcParams['image.cmap'] = 'gray'
+
 
 def update_parameters_with_gd(parameters, grads, learning_rate):
     """
@@ -39,9 +40,10 @@ def update_parameters_with_gd(parameters, grads, learning_rate):
 
     return parameters
 
+
 # #测试update_parameters_with_gd
 # print("-------------测试update_parameters_with_gd-------------")
-# parameters , grads , learning_rate = class2.testCase.update_parameters_with_gd_test_case()
+# parameters , grads , learning_rate = update_parameters_with_gd_test_case()
 # parameters = update_parameters_with_gd(parameters,grads,learning_rate)
 # print("W1 = " + str(parameters["W1"]))
 # print("b1 = " + str(parameters["b1"]))
@@ -129,6 +131,7 @@ def random_mini_batches(X, Y, mini_batch_size=64, seed=0):
 
     return mini_batches
 
+
 # #测试random_mini_batches
 # print("-------------测试random_mini_batches-------------")
 # X_assess,Y_assess,mini_batch_size = class2.testCase.random_mini_batches_test_case()
@@ -165,9 +168,10 @@ def initialize_velocity(parameters):
 
     return v
 
+
 # #测试initialize_velocity
 # print("-------------测试initialize_velocity-------------")
-# parameters = class2.testCase.initialize_velocity_test_case()
+# parameters = initialize_velocity_test_case()
 # v = initialize_velocity(parameters)
 #
 # print('v["dW1"] = ' + str(v["dW1"]))
@@ -206,9 +210,10 @@ def update_parameters_with_momentun(parameters, grads, v, beta, learning_rate):
 
     return parameters, v
 
+
 # #测试update_parameters_with_momentun
 # print("-------------测试update_parameters_with_momentun-------------")
-# parameters,grads,v = class2.testCase.update_parameters_with_momentum_test_case()
+# parameters,grads,v = update_parameters_with_momentum_test_case()
 # update_parameters_with_momentun(parameters,grads,v,beta=0.9,learning_rate=0.01)
 #
 # print("W1 = " + str(parameters["W1"]))
@@ -253,9 +258,10 @@ def initialize_adam(parameters):
 
     return (v, s)
 
+
 # #测试initialize_adam
 # print("-------------测试initialize_adam-------------")
-# parameters = class2.testCase.initialize_adam_test_case()
+# parameters = initialize_adam_test_case()
 # v,s = initialize_adam(parameters)
 #
 # print('v["dW1"] = ' + str(v["dW1"]))
@@ -314,15 +320,16 @@ def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate=0.01, 
 
         # 更新参数，输入: "parameters, learning_rate, v_corrected, s_corrected, epsilon". 输出: "parameters".
         parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * (
-                    v_corrected["dW" + str(l + 1)] / np.sqrt(s_corrected["dW" + str(l + 1)] + epsilon))
+                v_corrected["dW" + str(l + 1)] / np.sqrt(s_corrected["dW" + str(l + 1)] + epsilon))
         parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * (
-                    v_corrected["db" + str(l + 1)] / np.sqrt(s_corrected["db" + str(l + 1)] + epsilon))
+                v_corrected["db" + str(l + 1)] / np.sqrt(s_corrected["db" + str(l + 1)] + epsilon))
 
     return (parameters, v, s)
 
-#测试update_with_parameters_with_adam
+
+# 测试update_with_parameters_with_adam
 # print("-------------测试update_with_parameters_with_adam-------------")
-# parameters , grads , v , s = class2.testCase.update_parameters_with_adam_test_case()
+# parameters , grads , v , s = update_parameters_with_adam_test_case()
 # update_parameters_with_adam(parameters,grads,v,s,t=2)
 #
 # print("W1 = " + str(parameters["W1"]))
@@ -338,7 +345,8 @@ def update_parameters_with_adam(parameters, grads, v, s, t, learning_rate=0.01, 
 # print('s["dW2"] = ' + str(s["dW2"]))
 # print('s["db2"] = ' + str(s["db2"]))
 
-train_X, train_Y = class2.opt_utils.load_dataset(is_plot=True)
+train_X, train_Y = load_dataset(is_plot=True)
+
 
 def model(X, Y, layers_dims, optimizer, learning_rate=0.0007,
           mini_batch_size=64, beta=0.9, beta1=0.9, beta2=0.999,
@@ -371,7 +379,7 @@ def model(X, Y, layers_dims, optimizer, learning_rate=0.0007,
     seed = 10  # 随机种子
 
     # 初始化参数
-    parameters = class2.opt_utils.initialize_parameters(layers_dims)
+    parameters = initialize_parameters(layers_dims)
 
     # 选择优化器
     if optimizer == "gd":
@@ -395,13 +403,13 @@ def model(X, Y, layers_dims, optimizer, learning_rate=0.0007,
             (minibatch_X, minibatch_Y) = minibatch
 
             # 前向传播
-            A3, cache = class2.opt_utils.forward_propagation(minibatch_X, parameters)
+            A3, cache = forward_propagation(minibatch_X, parameters)
 
             # 计算误差
-            cost = class2.opt_utils.compute_cost(A3, minibatch_Y)
+            cost = compute_cost(A3, minibatch_Y)
 
             # 反向传播
-            grads = class2.opt_utils.backward_propagation(minibatch_X, minibatch_Y, cache)
+            grads = backward_propagation(minibatch_X, minibatch_Y, cache)
 
             # 更新参数
             if optimizer == "gd":
@@ -428,44 +436,45 @@ def model(X, Y, layers_dims, optimizer, learning_rate=0.0007,
 
     return parameters
 
+
 # #使用普通的梯度下降
 # layers_dims = [train_X.shape[0],5,2,1]
 # parameters = model(train_X, train_Y, layers_dims, optimizer="gd",is_plot=True)
 #
 # #预测
-# preditions = class2.opt_utils.predict(train_X,train_Y,parameters)
+# preditions = predict(train_X,train_Y,parameters)
 #
 # #绘制分类图
 # plt.title("Model with Gradient Descent optimization")
 # axes = plt.gca()
 # axes.set_xlim([-1.5, 2.5])
 # axes.set_ylim([-1, 1.5])
-# class2.opt_utils.plot_decision_boundary(lambda x: class2.opt_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
 # #使用动量的梯度下降
 # layers_dims = [train_X.shape[0],5,2,1]
 # parameters = model(train_X, train_Y, layers_dims, beta=0.9,optimizer="momentum",is_plot=True)
 #
 # #预测
-# preditions = class2.opt_utils.predict(train_X,train_Y,parameters)
+# preditions = predict(train_X,train_Y,parameters)
 #
 # #绘制分类图
 # plt.title("Model with Momentum optimization")
 # axes = plt.gca()
 # axes.set_xlim([-1.5, 2.5])
 # axes.set_ylim([-1, 1.5])
-# class2.opt_utils.plot_decision_boundary(lambda x: class2.opt_utils.predict_dec(parameters, x.T), train_X, train_Y)
+# plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
 
-#使用Adam优化的梯度下降
+# 使用Adam优化的梯度下降
 layers_dims = [train_X.shape[0], 5, 2, 1]
-parameters = model(train_X, train_Y, layers_dims, optimizer="adam",is_plot=True)
+parameters = model(train_X, train_Y, layers_dims, optimizer="adam", is_plot=True)
 
-#预测
-preditions = class2.opt_utils.predict(train_X,train_Y,parameters)
+# 预测
+preditions = predict(train_X, train_Y, parameters)
 
-#绘制分类图
+# 绘制分类图
 plt.title("Model with Adam optimization")
 axes = plt.gca()
 axes.set_xlim([-1.5, 2.5])
 axes.set_ylim([-1, 1.5])
-class2.opt_utils.plot_decision_boundary(lambda x: class2.opt_utils.predict_dec(parameters, x.T), train_X, train_Y)
+plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)

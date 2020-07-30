@@ -17,7 +17,7 @@ import numpy as np
 from numpy import genfromtxt
 import pandas as pd
 import tensorflow as tf
-import class4.fr_utils
+from class4.fr_utils import *
 from class4.inception_blocks_v2 import *
 
 # ------------用于绘制模型细节，可选--------------#
@@ -89,7 +89,7 @@ start_time = time.clock()
 # 编译模型
 FRmodel.compile(optimizer='adam', loss=triplet_loss, metrics=['accuracy'])
 # 加载权值
-class4.fr_utils.load_weights_from_FaceNet(FRmodel)
+load_weights_from_FaceNet(FRmodel)
 # 结束时间
 end_time = time.clock()
 # 计算时差
@@ -98,18 +98,20 @@ print("执行了：" + str(int(minium / 60)) + "分" + str(int(minium % 60)) + "
 
 print("图像编码")
 database = {}
-database["danielle"] = class4.fr_utils.img_to_encoding("images/danielle.png", FRmodel)
-database["younes"] = class4.fr_utils.img_to_encoding("images/younes.jpg", FRmodel)
-database["tian"] = class4.fr_utils.img_to_encoding("images/tian.jpg", FRmodel)
-database["andrew"] = class4.fr_utils.img_to_encoding("images/andrew.jpg", FRmodel)
-database["kian"] = class4.fr_utils.img_to_encoding("images/kian.jpg", FRmodel)
-database["dan"] = class4.fr_utils.img_to_encoding("images/dan.jpg", FRmodel)
-database["sebastiano"] = class4.fr_utils.img_to_encoding("images/sebastiano.jpg", FRmodel)
-database["bertrand"] = class4.fr_utils.img_to_encoding("images/bertrand.jpg", FRmodel)
-database["kevin"] = class4.fr_utils.img_to_encoding("images/kevin.jpg", FRmodel)
-database["felix"] = class4.fr_utils.img_to_encoding("images/felix.jpg", FRmodel)
-database["benoit"] = class4.fr_utils.img_to_encoding("images/benoit.jpg", FRmodel)
-database["arnaud"] = class4.fr_utils.img_to_encoding("images/arnaud.jpg", FRmodel)
+database["danielle"] = img_to_encoding("images/danielle.png", FRmodel)
+database["younes"] = img_to_encoding("images/younes.jpg", FRmodel)
+database["tian"] = img_to_encoding("images/tian.jpg", FRmodel)
+database["andrew"] = img_to_encoding("images/andrew.jpg", FRmodel)
+database["kian"] = img_to_encoding("images/kian.jpg", FRmodel)
+database["dan"] = img_to_encoding("images/dan.jpg", FRmodel)
+database["sebastiano"] = img_to_encoding("images/sebastiano.jpg", FRmodel)
+database["bertrand"] = img_to_encoding("images/bertrand.jpg", FRmodel)
+database["kevin"] = img_to_encoding("images/kevin.jpg", FRmodel)
+database["felix"] = img_to_encoding("images/felix.jpg", FRmodel)
+database["benoit"] = img_to_encoding("images/benoit.jpg", FRmodel)
+database["arnaud"] = img_to_encoding("images/arnaud.jpg", FRmodel)
+
+
 # print(database)
 
 def verify(image_path, identity, database, model):
@@ -127,7 +129,7 @@ def verify(image_path, identity, database, model):
            is_open_door -- boolean,是否该开门。
        """
     # 第一步：计算图像的编码，使用fr_utils.img_to_encoding()来计算。
-    encoding = class4.fr_utils.img_to_encoding(image_path, model)
+    encoding = img_to_encoding(image_path, model)
 
     # 第二步：计算与数据库中保存的编码的差距
     dist = np.linalg.norm(encoding - database[identity])
@@ -162,7 +164,7 @@ def who_is_it(image_path, database, model):
             identity -- 字符串类型，与min_dist编码相对应的名字。
         """
     # 步骤1：计算指定图像的编码，使用fr_utils.img_to_encoding()来计算。
-    encoding = class4.fr_utils.img_to_encoding(image_path, model)
+    encoding = img_to_encoding(image_path, model)
 
     # 步骤2 ：找到最相近的编码
     ## 初始化min_dist变量为足够大的数字，这里设置为100

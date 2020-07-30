@@ -11,14 +11,15 @@ import pydot
 from IPython.display import SVG
 # from keras.utils.visualize_util import model_to_dot
 # from keras.utils.visualize_util import plot
-import class4.kt_utils
+from class4.kt_utils import *
 
 import keras.backend as K
+
 K.set_image_data_format('channels_last')
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 
-X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = class4.kt_utils.load_dataset()
+X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()
 # Normalize image vectors
 X_train = X_train_orig / 255
 X_test = X_test_orig / 255

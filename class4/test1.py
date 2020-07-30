@@ -108,7 +108,6 @@ print(vgg['layers'][0][0][0][0][2][0][1].shape)  # (64, 1)
 # print(vgg['layers'][0][0][0][0][8])  # []
 
 
-
 model = load_vgg_model("pretrained-model/imagenet-vgg-verydeep-19.mat")
 # print(sess.run(model))
 sess.run(model['input'].assign(content_image))
