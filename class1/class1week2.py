@@ -3,54 +3,55 @@ import matplotlib.pyplot as plt
 import h5py
 from class1.lr_utils import load_dataset
 
-#train_set_x_orig.shape = (209, 64, 64, 3)
-#train_set_y.shape = (1, 209)
-#test_set_x_orig.shape = (50, 64, 64, 3)
-#test_set_y.shape = (1, 50)
-#classes.shape = (2,)
+# train_set_x_orig.shape = (209, 64, 64, 3)
+# train_set_y.shape = (1, 209)
+# test_set_x_orig.shape = (50, 64, 64, 3)
+# test_set_y.shape = (1, 50)
+# classes.shape = (2,)
 print("=========================加载数据=========================")
-train_set_x_orig , train_set_y , test_set_x_orig , test_set_y , classes = load_dataset()
+train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()
 
 print("查看所有训练集样本标签：")
-print("train_set_y=" + str(train_set_y)) #你也可以看一下训练集里面的标签是什么样的。
+print("train_set_y=" + str(train_set_y))  # 你也可以看一下训练集里面的标签是什么样的。
 
 index = 25
 print("查看第 %i 个样本：" % index)
 plt.imshow(train_set_x_orig[index])
 plt.show()
-#打印出当前的训练标签值
-#使用np.squeeze的目的是压缩维度，【未压缩】train_set_y[:,index]的值为[1] , 【压缩后】np.squeeze(train_set_y[:,index])的值为1
+# 打印出当前的训练标签值
+# 使用np.squeeze的目的是压缩维度，【未压缩】train_set_y[:,index]的值为[1] , 【压缩后】np.squeeze(train_set_y[:,index])的值为1
 print("查看第 %i 个样本标签值：" % index)
-print("使用np.squeeze：y=" + str(np.squeeze(train_set_y[:,index])) + "，不使用np.squeeze：y=" + str(train_set_y[:,index]))
-#只有压缩后的值才能进行解码操作
+print("使用np.squeeze：y=" + str(np.squeeze(train_set_y[:, index])) + "，不使用np.squeeze：y=" + str(train_set_y[:, index]))
+# 只有压缩后的值才能进行解码操作
 print("查看第 %i 个样本标签解码：" % index)
-print("y=" + str(train_set_y[:,index]) + ", it's a " + classes[np.squeeze(train_set_y[:,index])].decode("utf-8") + "' picture")
+print("y=" + str(train_set_y[:, index]) + ", it's a " + classes[np.squeeze(train_set_y[:, index])].decode(
+    "utf-8") + "' picture")
 
 print("数据预处理：")
-m_train = train_set_y.shape[1] #训练集里图片的数量。
-m_test = test_set_y.shape[1] #测试集里图片的数量。
-num_px = train_set_x_orig.shape[1] #训练、测试集里面的图片的宽度和高度（均为64x64）。
+m_train = train_set_y.shape[1]  # 训练集里图片的数量。
+m_test = test_set_y.shape[1]  # 测试集里图片的数量。
+num_px = train_set_x_orig.shape[1]  # 训练、测试集里面的图片的宽度和高度（均为64x64）。
 
-#现在看一看我们加载的东西的具体情况
-print ("训练集的数量: m_train = " + str(m_train))
-print ("测试集的数量 : m_test = " + str(m_test))
-print ("每张图片的宽/高 : num_px = " + str(num_px))
-print ("每张图片的大小 : (" + str(num_px) + ", " + str(train_set_x_orig.shape[2]) + ", " + str(train_set_x_orig.shape[3]) + ")")
-print ("训练集_图片的维数 : " + str(train_set_x_orig.shape))
-print ("训练集_标签的维数 : " + str(train_set_y.shape))
-print ("测试集_图片的维数: " + str(test_set_x_orig.shape))
-print ("测试集_标签的维数: " + str(test_set_y.shape))
+# 现在看一看我们加载的东西的具体情况
+print("训练集的数量: m_train = " + str(m_train))
+print("测试集的数量 : m_test = " + str(m_test))
+print("每张图片的宽/高 : num_px = " + str(num_px))
+print("每张图片的大小 : (" + str(num_px) + ", " + str(train_set_x_orig.shape[2]) + ", " + str(train_set_x_orig.shape[3]) + ")")
+print("训练集_图片的维数 : " + str(train_set_x_orig.shape))
+print("训练集_标签的维数 : " + str(train_set_y.shape))
+print("测试集_图片的维数: " + str(test_set_x_orig.shape))
+print("测试集_标签的维数: " + str(test_set_y.shape))
 
-#X_flatten = X.reshape(X.shape [0]，-1).T ＃X.T是X的转置
-#将训练集的维度降低并转置。
-train_set_x_flatten  = train_set_x_orig.reshape(train_set_x_orig.shape[0],-1).T
-#将测试集的维度降低并转置。
+# X_flatten = X.reshape(X.shape [0]，-1).T ＃X.T是X的转置
+# 将训练集的维度降低并转置。
+train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
+# 将测试集的维度降低并转置。
 test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0], -1).T
 
-print ("训练集降维最后的维度： " + str(train_set_x_flatten.shape))
-print ("训练集_标签的维数 : " + str(train_set_y.shape))
-print ("测试集降维之后的维度: " + str(test_set_x_flatten.shape))
-print ("测试集_标签的维数 : " + str(test_set_y.shape))
+print("训练集降维最后的维度： " + str(train_set_x_flatten.shape))
+print("训练集_标签的维数 : " + str(train_set_y.shape))
+print("测试集降维之后的维度: " + str(test_set_x_flatten.shape))
+print("测试集_标签的维数 : " + str(test_set_y.shape))
 
 train_set_x = train_set_x_flatten / 255
 test_set_x = test_set_x_flatten / 255
@@ -67,10 +68,11 @@ def sigmoid(z):
     s = 1 / (1 + np.exp(-z))
     return s
 
-#测试sigmoid()
+
+# 测试sigmoid()
 print("====================测试sigmoid====================")
-print ("sigmoid(0) = " + str(sigmoid(0)))
-print ("sigmoid(9.2) = " + str(sigmoid(9.2)))
+print("sigmoid(0) = " + str(sigmoid(0)))
+print("sigmoid(9.2) = " + str(sigmoid(9.2)))
 
 
 def initialize_with_zeros(dim):
@@ -130,14 +132,15 @@ def propagate(w, b, X, Y):
     }
     return (grads, cost)
 
-#测试一下propagate
+
+# 测试一下propagate
 print("====================测试propagate====================")
-#初始化一些参数
-w, b, X, Y = np.array([[1], [2]]), 2, np.array([[1,2], [3,4]]), np.array([[1, 0]])
+# 初始化一些参数
+w, b, X, Y = np.array([[1], [2]]), 2, np.array([[1, 2], [3, 4]]), np.array([[1, 0]])
 grads, cost = propagate(w, b, X, Y)
-print ("dw = " + str(grads["dw"]))
-print ("db = " + str(grads["db"]))
-print ("cost = " + str(cost))
+print("dw = " + str(grads["dw"]))
+print("db = " + str(grads["db"]))
+print("cost = " + str(cost))
 
 
 def optimize(w, b, X, Y, num_iterations, learning_rate, print_cost=False):
@@ -191,14 +194,15 @@ def optimize(w, b, X, Y, num_iterations, learning_rate, print_cost=False):
         "db": db}
     return (params, grads, costs)
 
-#测试optimize
+
+# 测试optimize
 print("====================测试optimize====================")
-w, b, X, Y = np.array([[1], [2]]), 2, np.array([[1,2], [3,4]]), np.array([[1, 0]])
-params , grads , costs = optimize(w , b , X , Y , num_iterations=100 , learning_rate = 0.009 , print_cost = False)
-print ("w = " + str(params["w"]))
-print ("b = " + str(params["b"]))
-print ("dw = " + str(grads["dw"]))
-print ("db = " + str(grads["db"]))
+w, b, X, Y = np.array([[1], [2]]), 2, np.array([[1, 2], [3, 4]]), np.array([[1, 0]])
+params, grads, costs = optimize(w, b, X, Y, num_iterations=100, learning_rate=0.009, print_cost=False)
+print("w = " + str(params["w"]))
+print("b = " + str(params["b"]))
+print("dw = " + str(grads["dw"]))
+print("db = " + str(grads["db"]))
 
 
 def predict(w, b, X):
@@ -229,9 +233,10 @@ def predict(w, b, X):
 
     return Y_prediction
 
-#测试predict
+
+# 测试predict
 print("====================测试predict====================")
-w, b, X, Y = np.array([[1], [2]]), 2, np.array([[1,2], [3,4]]), np.array([[1, 0]])
+w, b, X, Y = np.array([[1], [2]]), 2, np.array([[1, 2], [3, 4]]), np.array([[1, 0]])
 print("predictions = " + str(predict(w, b, X)))
 
 
@@ -276,15 +281,16 @@ def model(X_train, Y_train, X_test, Y_test, num_iterations=2000, learning_rate=0
         "num_iterations": num_iterations}
     return d
 
+
 print("====================测试model====================")
-#这里加载的是真实的数据，请参见上面的代码部分。
-#from planar_utils import plot_decision_boundary, sigmoid, load_planar_dataset, load_extra_datasets
-#X, Y = load_planar_dataset()
-#d = model(X, Y, X, Y, num_iterations = 2000, learning_rate = 0.005, print_cost = True)
+# 这里加载的是真实的数据，请参见上面的代码部分。
+# from planar_utils import plot_decision_boundary, sigmoid, load_planar_dataset, load_extra_datasets
+# X, Y = load_planar_dataset()
+# d = model(X, Y, X, Y, num_iterations = 2000, learning_rate = 0.005, print_cost = True)
 
-d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations = 2000, learning_rate = 0.005, print_cost = True)
+d = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=2000, learning_rate=0.005, print_cost=True)
 
-#绘制图
+# 绘制图
 print("绘制代价折线图：")
 costs = np.squeeze(d['costs'])
 plt.plot(costs)
@@ -297,9 +303,10 @@ print("====================测试不同学习率====================")
 learning_rates = [0.01, 0.001, 0.0001]
 models = {}
 for i in learning_rates:
-    print ("learning rate is: " + str(i))
-    models[str(i)] = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations = 1500, learning_rate = i, print_cost = False)
-    print ('\n' + "-------------------------------------------------------" + '\n')
+    print("learning rate is: " + str(i))
+    models[str(i)] = model(train_set_x, train_set_y, test_set_x, test_set_y, num_iterations=1500, learning_rate=i,
+                           print_cost=False)
+    print('\n' + "-------------------------------------------------------" + '\n')
 
 for i in learning_rates:
     plt.plot(np.squeeze(models[str(i)]["costs"]), label=str(models[str(i)]["learning_rate"]))

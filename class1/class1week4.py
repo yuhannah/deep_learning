@@ -1,11 +1,12 @@
 import numpy as np
 import h5py
 import matplotlib.pyplot as plt
-import class1.testCases14 #参见资料包，或者在文章底部copy
-from class1.dnn_utils import sigmoid, sigmoid_backward, relu, relu_backward #参见资料包
-import class1.lr_utils #参见资料包，或者在文章底部copy
+import class1.testCases14  # 参见资料包，或者在文章底部copy
+from class1.dnn_utils import sigmoid, sigmoid_backward, relu, relu_backward  # 参见资料包
+from class1.lr_utils import load_dataset  # 参见资料包，或者在文章底部copy
 
 np.random.seed(1)
+
 
 def initialize_parameters(n_x, n_h, n_y):
     """
@@ -41,12 +42,14 @@ def initialize_parameters(n_x, n_h, n_y):
 
     return parameters
 
+
 print("==============测试initialize_parameters==============")
-parameters = initialize_parameters(3,2,1)
+parameters = initialize_parameters(3, 2, 1)
 print("W1 = " + str(parameters["W1"]))
 print("b1 = " + str(parameters["b1"]))
 print("W2 = " + str(parameters["W2"]))
 print("b2 = " + str(parameters["b2"]))
+
 
 def initialize_parameters_deep(layers_dims):
     """
@@ -63,7 +66,7 @@ def initialize_parameters_deep(layers_dims):
     parameters = {}
     L = len(layers_dims)
 
-    for l in range(1, L):#1,...,L-1
+    for l in range(1, L):  # 1,...,L-1
         parameters["W" + str(l)] = np.random.randn(layers_dims[l], layers_dims[l - 1]) / np.sqrt(layers_dims[l - 1])
         parameters["b" + str(l)] = np.zeros((layers_dims[l], 1))
 
@@ -73,14 +76,16 @@ def initialize_parameters_deep(layers_dims):
 
     return parameters
 
-#测试initialize_parameters_deep
+
+# 测试initialize_parameters_deep
 print("==============测试initialize_parameters_deep==============")
-layers_dims = [5,4,3]
+layers_dims = [5, 4, 3]
 parameters = initialize_parameters_deep(layers_dims)
 print("W1 = " + str(parameters["W1"]))
 print("b1 = " + str(parameters["b1"]))
 print("W2 = " + str(parameters["W2"]))
 print("b2 = " + str(parameters["b2"]))
+
 
 def linear_forward(A, W, b):
     """
@@ -101,11 +106,13 @@ def linear_forward(A, W, b):
 
     return Z, cache
 
-#测试linear_forward
+
+# 测试linear_forward
 print("==============测试linear_forward==============")
-A,W,b = class1.testCases14.linear_forward_test_case()
-Z,linear_cache = linear_forward(A,W,b)
+A, W, b = class1.testCases14.linear_forward_test_case()
+Z, linear_cache = linear_forward(A, W, b)
 print("Z = " + str(Z))
+
 
 def linear_activation_forward(A_prev, W, b, activation):
     """
@@ -134,13 +141,15 @@ def linear_activation_forward(A_prev, W, b, activation):
 
     return A, cache
 
-#测试linear_activation_forward
+
+# 测试linear_activation_forward
 print("==============测试linear_activation_forward==============")
-A_prev, W,b = class1.testCases14.linear_activation_forward_test_case()
-A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation = "sigmoid")
+A_prev, W, b = class1.testCases14.linear_activation_forward_test_case()
+A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation="sigmoid")
 print("sigmoid，A = " + str(A))
-A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation = "relu")
+A, linear_activation_cache = linear_activation_forward(A_prev, W, b, activation="relu")
 print("ReLU，A = " + str(A))
+
 
 def L_model_forward(X, parameters):
     """
@@ -159,7 +168,7 @@ def L_model_forward(X, parameters):
     caches = []
     A = X
     L = len(parameters) // 2
-    for l in range(1, L):#1,...,L-1
+    for l in range(1, L):  # 1,...,L-1
         # print(l)
         A_prev = A
         A, cache = linear_activation_forward(A_prev, parameters['W' + str(l)], parameters['b' + str(l)], "relu")
@@ -172,12 +181,14 @@ def L_model_forward(X, parameters):
 
     return AL, caches
 
-#测试L_model_forward
+
+# 测试L_model_forward
 print("==============测试L_model_forward==============")
 X, parameters = class1.testCases14.L_model_forward_test_case()
-AL, caches = L_model_forward(X,parameters)
+AL, caches = L_model_forward(X, parameters)
 print("AL = " + str(AL))
 print("caches 的长度为 = " + str(len(caches)))
+
 
 def compute_cost(AL, Y):
     """
@@ -198,10 +209,12 @@ def compute_cost(AL, Y):
 
     return cost
 
-#测试compute_cost
+
+# 测试compute_cost
 print("==============测试compute_cost==============")
-Y,AL = class1.testCases14.compute_cost_test_case()
+Y, AL = class1.testCases14.compute_cost_test_case()
 print("cost = " + str(compute_cost(AL, Y)))
+
 
 def linear_backward(dZ, cache):
     """
@@ -228,13 +241,15 @@ def linear_backward(dZ, cache):
 
     return dA_prev, dW, db
 
-#测试linear_backward
+
+# 测试linear_backward
 print("==============测试linear_backward==============")
 dZ, linear_cache = class1.testCases14.linear_backward_test_case()
 dA_prev, dW, db = linear_backward(dZ, linear_cache)
-print ("dA_prev = "+ str(dA_prev))
-print ("dW = " + str(dW))
-print ("db = " + str(db))
+print("dA_prev = " + str(dA_prev))
+print("dW = " + str(dW))
+print("db = " + str(db))
+
 
 def linear_activation_backward(dA, cache, activation="relu"):
     """
@@ -259,6 +274,7 @@ def linear_activation_backward(dA, cache, activation="relu"):
 
     return dA_prev, dW, db
 
+
 # 测试linear_activation_backward
 print("==============测试linear_activation_backward==============")
 AL, linear_activation_cache = class1.testCases14.linear_activation_backward_test_case()
@@ -274,6 +290,7 @@ print("relu:")
 print("dA_prev = " + str(dA_prev))
 print("dW = " + str(dW))
 print("db = " + str(db))
+
 
 def L_model_backward(AL, Y, caches):
     """
@@ -302,7 +319,7 @@ def L_model_backward(AL, Y, caches):
     grads["dA" + str(L)], grads["dW" + str(L)], grads["db" + str(L)] = linear_activation_backward(dAL, current_cache,
                                                                                                   "sigmoid")
 
-    for l in reversed(range(L - 1)):#L-2,...,0
+    for l in reversed(range(L - 1)):  # L-2,...,0
         # print(l)
         current_cache = caches[l]
         dA_prev_temp, dW_temp, db_temp = linear_activation_backward(grads["dA" + str(l + 2)], current_cache, "relu")
@@ -312,13 +329,15 @@ def L_model_backward(AL, Y, caches):
 
     return grads
 
-#测试L_model_backward
+
+# 测试L_model_backward
 print("==============测试L_model_backward==============")
 AL, Y_assess, caches = class1.testCases14.L_model_backward_test_case()
 grads = L_model_backward(AL, Y_assess, caches)
-print ("dW1 = "+ str(grads["dW1"]))
-print ("db1 = "+ str(grads["db1"]))
-print ("dA1 = "+ str(grads["dA1"]))
+print("dW1 = " + str(grads["dW1"]))
+print("db1 = " + str(grads["db1"]))
+print("dA1 = " + str(grads["dA1"]))
+
 
 def update_parameters(parameters, grads, learning_rate):
     """
@@ -334,12 +353,13 @@ def update_parameters(parameters, grads, learning_rate):
                    参数[“b”+ str（l）] = ...
     """
     L = len(parameters) // 2  # 整除
-    for l in range(L):#0,...,L-1
+    for l in range(L):  # 0,...,L-1
         # print(l)
         parameters["W" + str(l + 1)] = parameters["W" + str(l + 1)] - learning_rate * grads["dW" + str(l + 1)]
         parameters["b" + str(l + 1)] = parameters["b" + str(l + 1)] - learning_rate * grads["db" + str(l + 1)]
 
     return parameters
+
 
 # 测试update_parameters
 print("==============测试update_parameters==============")
@@ -431,7 +451,8 @@ def two_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000
     # 返回parameters
     return parameters
 
-train_set_x_orig , train_set_y , test_set_x_orig , test_set_y , classes = class1.lr_utils.load_dataset()
+
+train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()
 
 train_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
 test_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0], -1).T
@@ -440,6 +461,7 @@ train_x = train_x_flatten / 255
 train_y = train_set_y
 test_x = test_x_flatten / 255
 test_y = test_set_y
+
 
 # n_x = 12288
 # n_h = 7
@@ -477,6 +499,7 @@ def predict(X, y, parameters):
     print("准确度为: " + str(float(np.sum((p == y)) / m)))
 
     return p
+
 
 # predictions_train = predict(train_x, train_y, parameters) #训练集
 # predictions_test = predict(test_x, test_y, parameters) #测试集
@@ -529,11 +552,13 @@ def L_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, 
 
     return parameters
 
-layers_dims = [12288, 20, 7, 5, 1] #  5-layer model
-parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations = 2500, print_cost = True,isPlot=True)
 
-pred_train = predict(train_x, train_y, parameters) #训练集
-pred_test = predict(test_x, test_y, parameters) #测试集
+layers_dims = [12288, 20, 7, 5, 1]  # 5-layer model
+parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations=2500, print_cost=True, isPlot=True)
+
+pred_train = predict(train_x, train_y, parameters)  # 训练集
+pred_test = predict(test_x, test_y, parameters)  # 测试集
+
 
 def print_mislabeled_images(classes, X, y, p):
     """
@@ -557,5 +582,6 @@ def print_mislabeled_images(classes, X, y, p):
             "Prediction: " + classes[int(p[0, index])].decode("utf-8") + " \n Class: " + classes[y[0, index]].decode(
                 "utf-8"))
     plt.show()
+
 
 print_mislabeled_images(classes, test_x, test_y, pred_test)

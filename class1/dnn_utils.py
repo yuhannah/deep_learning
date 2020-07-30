@@ -1,5 +1,6 @@
 ﻿import numpy as np
 
+
 def sigmoid(Z):
     """
     Implements the sigmoid activation in numpy
@@ -12,10 +13,11 @@ def sigmoid(Z):
     cache -- returns Z as well, useful during backpropagation
     """
 
-    A = 1/(1+np.exp(-Z))
+    A = 1 / (1 + np.exp(-Z))
     cache = Z
 
     return A, cache
+
 
 def sigmoid_backward(dA, cache):
     """
@@ -31,12 +33,13 @@ def sigmoid_backward(dA, cache):
 
     Z = cache
 
-    s = 1/(1+np.exp(-Z))
-    dZ = dA * s * (1-s)
+    s = 1 / (1 + np.exp(-Z))
+    dZ = dA * s * (1 - s)
 
     assert (dZ.shape == Z.shape)
 
     return dZ
+
 
 def relu(Z):
     """
@@ -50,12 +53,13 @@ def relu(Z):
     cache -- a python dictionary containing "A" ; stored for computing the backward pass efficiently
     """
 
-    A = np.maximum(0,Z)
+    A = np.maximum(0, Z)
 
-    assert(A.shape == Z.shape)
+    assert (A.shape == Z.shape)
 
-    cache = Z 
+    cache = Z
     return A, cache
+
 
 def relu_backward(dA, cache):
     """
@@ -70,7 +74,7 @@ def relu_backward(dA, cache):
     """
 
     Z = cache
-    dZ = np.array(dA, copy=True) # just converting dz to a correct object.
+    dZ = np.array(dA, copy=True)  # just converting dz to a correct object.
 
     # When z <= 0, you should set dz to 0 as well. 
     dZ[Z <= 0] = 0
@@ -78,4 +82,3 @@ def relu_backward(dA, cache):
     assert (dZ.shape == Z.shape)
 
     return dZ
-
