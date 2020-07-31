@@ -1,29 +1,15 @@
-from keras.models import Sequential
-from keras.layers import Conv2D, ZeroPadding2D, Activation, Input, concatenate
-from keras.models import Model
-from keras.layers.normalization import BatchNormalization
-from keras.layers.pooling import MaxPooling2D, AveragePooling2D
-from keras.layers.merge import Concatenate
-from keras.layers.core import Lambda, Flatten, Dense
-from keras.initializers import glorot_uniform
-from keras.engine.topology import Layer
-from keras import backend as K
-
 import time
 import cv2
 import os
 import sys
 import numpy as np
-from numpy import genfromtxt
-import pandas as pd
 import tensorflow as tf
+from IPython.display import SVG
+
 from class4.fr_utils import *
 from class4.inception_blocks_v2 import *
 
-# ------------用于绘制模型细节，可选--------------#
-from IPython.display import SVG
-from keras.utils.vis_utils import model_to_dot
-from keras.utils import plot_model
+from tensorflow.keras import backend as K
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
 
@@ -36,8 +22,8 @@ FRmodel = faceRecoModel(input_shape=(3, 96, 96))
 # 打印模型的总参数数量
 print("参数数量：" + str(FRmodel.count_params()))
 # ------------用于绘制模型细节，可选--------------#
-plot_model(FRmodel, to_file='FRmodel1.png')
-SVG(model_to_dot(FRmodel).create(prog='dot', format='svg'))
+tf.keras.utils.plot_model(FRmodel, to_file='FRmodel1.png')
+SVG(tf.keras.utils.model_to_dot(FRmodel).create(prog='dot', format='svg'))
 
 
 def triplet_loss(y_true, y_pred, alpha=0.2):

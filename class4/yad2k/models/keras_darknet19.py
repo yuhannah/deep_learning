@@ -1,23 +1,18 @@
 """Darknet19 Model Defined in Keras."""
 import functools
 from functools import partial
-
-from keras.layers import Conv2D, MaxPooling2D
-from keras.layers.advanced_activations import LeakyReLU
-from keras.layers.normalization import BatchNormalization
-from keras.models import Model
-from keras.regularizers import l2
+import tensorflow as tf
 
 from ..utils import compose
 
 # Partial wrapper for Convolution2D with static default argument.
-_DarknetConv2D = partial(Conv2D, padding='same')
+_DarknetConv2D = partial(tf.keras.layers.Conv2D, padding='same')
 
 
-@functools.wraps(Conv2D)
+@functools.wraps(tf.keras.layers.Conv2D)
 def DarknetConv2D(*args, **kwargs):
     """Wrapper to set Darknet weight regularizer for Convolution2D."""
-    darknet_conv_kwargs = {'kernel_regularizer': l2(5e-4)}
+    darknet_conv_kwargs = {'kernel_regularizer': tf.keras.regularizers.l2(5e-4)}
     darknet_conv_kwargs.update(kwargs)
     return _DarknetConv2D(*args, **darknet_conv_kwargs)
 
@@ -28,8 +23,8 @@ def DarknetConv2D_BN_Leaky(*args, **kwargs):
     no_bias_kwargs.update(kwargs)
     return compose(
         DarknetConv2D(*args, **no_bias_kwargs),
-        BatchNormalization(),
-        LeakyReLU(alpha=0.1))
+        tf.keras.layers.BatchNormalization(),
+        tf.keras.layers.LeakyReLU(alpha=0.1))
 
 
 def bottleneck_block(outer_filters, bottleneck_filters):
@@ -52,15 +47,15 @@ def darknet_body():
     """Generate first 18 conv layers of Darknet-19."""
     return compose(
         DarknetConv2D_BN_Leaky(32, (3, 3)),
-        MaxPooling2D(),
+        tf.keras.layers.MaxPooling2D(),
         DarknetConv2D_BN_Leaky(64, (3, 3)),
-        MaxPooling2D(),
+        tf.keras.layers.MaxPooling2D(),
         bottleneck_block(128, 64),
-        MaxPooling2D(),
+        tf.keras.layers.MaxPooling2D(),
         bottleneck_block(256, 128),
-        MaxPooling2D(),
+        tf.keras.layers.MaxPooling2D(),
         bottleneck_x2_block(512, 256),
-        MaxPooling2D(),
+        tf.keras.layers.MaxPooling2D(),
         bottleneck_x2_block(1024, 512))
 
 
@@ -68,4 +63,4 @@ def darknet19(inputs):
     """Generate Darknet-19 model for Imagenet classification."""
     body = darknet_body()(inputs)
     logits = DarknetConv2D(1000, (1, 1), activation='softmax')(body)
-    return Model(inputs, logits)
+    return tf.keras.models.Model(inputs, logits)

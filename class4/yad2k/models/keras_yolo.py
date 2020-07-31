@@ -3,10 +3,7 @@ import sys
 
 import numpy as np
 import tensorflow as tf
-from keras import backend as K
-from keras.layers import Lambda
-from keras.layers.merge import concatenate
-from keras.models import Model
+from tensorflow.keras import backend as K
 
 from ..utils import compose
 from .keras_darknet19 import (DarknetConv2D, DarknetConv2D_BN_Leaky, darknet_body)
@@ -43,7 +40,7 @@ def space_to_depth_x2_output_shape(input_shape):
 
 def yolo_body(inputs, num_anchors, num_classes):
     """Create YOLO_V2 model CNN body in Keras."""
-    darknet = Model(inputs, darknet_body()(inputs))
+    darknet = tf.keras.models.Model(inputs, darknet_body()(inputs))
     conv20 = compose(
         DarknetConv2D_BN_Leaky(1024, (3, 3)),
         DarknetConv2D_BN_Leaky(1024, (3, 3)))(darknet.output)
@@ -51,15 +48,15 @@ def yolo_body(inputs, num_anchors, num_classes):
     conv13 = darknet.layers[43].output
     conv21 = DarknetConv2D_BN_Leaky(64, (1, 1))(conv13)
     # TODO: Allow Keras Lambda to use func arguments for output_shape?
-    conv21_reshaped = Lambda(
+    conv21_reshaped = tf.keras.layers.Lambda(
         space_to_depth_x2,
         output_shape=space_to_depth_x2_output_shape,
         name='space_to_depth')(conv21)
 
-    x = concatenate([conv21_reshaped, conv20])
+    x = tf.keras.layers.concatenate([conv21_reshaped, conv20])
     x = DarknetConv2D_BN_Leaky(1024, (3, 3))(x)
     x = DarknetConv2D(num_anchors * (num_classes + 5), (1, 1))(x)
-    return Model(inputs, x)
+    return tf.keras.models.Model(inputs, x)
 
 
 def yolo_head(feats, anchors, num_classes):

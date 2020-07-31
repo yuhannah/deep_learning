@@ -1,17 +1,12 @@
 import argparse
 import os
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import imshow
 import PIL
-import scipy.io
-import scipy.misc
 import imageio
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from keras import backend as K
-from keras.layers import Input, Lambda, Conv2D
-from keras.models import load_model, Model
+import tensorflow.keras.backend as K
 
 from class4.yad2k.models.keras_yolo import yolo_head, yolo_boxes_to_corners, preprocess_true_boxes, yolo_loss, yolo_body
 
@@ -226,7 +221,7 @@ print("class_names = ", class_names)
 anchors = read_anchors("model_data/yolo_anchors.txt")
 print("anchors = ", anchors)
 image_shape = (720., 1280.)
-yolo_model = load_model("model_data/yolov2.h5")
+yolo_model = tf.keras.models.load_model("model_data/yolov2.h5")
 yolo_model.summary()
 yolo_outputs = yolo_head(yolo_model.output, anchors, len(class_names))
 scores, boxes, classes = yolo_eval(yolo_outputs, image_shape)
