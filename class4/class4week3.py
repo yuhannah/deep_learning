@@ -257,11 +257,11 @@ def predict(sess, image_file, is_show_info=True, is_plot=True):
     draw_boxes(image, out_scores, out_boxes, out_classes, class_names, colors)
 
     # 保存已经绘制了边界框的图
-    image.save(os.path.join("out", image_file), quality=100)
+    image.save(os.path.join("output", image_file), quality=100)
 
     # 打印出已经绘制了边界框的图
     if is_plot:
-        output_image = imageio.imread(os.path.join("out", image_file))
+        output_image = imageio.imread(os.path.join("output", image_file))
         plt.imshow(output_image)
         plt.show()
 

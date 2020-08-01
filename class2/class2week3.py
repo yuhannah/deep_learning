@@ -436,8 +436,8 @@ def model(X_train, Y_train, X_test, Y_test,
     with tf.Session() as sess:
 
         merged = tf.summary.merge_all()
-        train_writer = tf.summary.FileWriter("./log/train", sess.graph)
-        test_writer = tf.summary.FileWriter("./log/test", sess.graph)
+        train_writer = tf.summary.FileWriter("./tflog/train", sess.graph)
+        test_writer = tf.summary.FileWriter("./tflog/test", sess.graph)
 
         # 初始化
         sess.run(init)
