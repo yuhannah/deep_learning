@@ -12,7 +12,8 @@
 *.csv
 *.otf
 events.out.tfevents.*
-
-
+data/
+output/
 .ipynb_checkpoints
 *.iml
+*.midi
