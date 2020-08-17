@@ -12,17 +12,20 @@
 *.csv
 *.otf
 events.out.tfevents.*
-
-.ipynb_checkpoints
-*.iml
 *.midi
+*.iml
 
-data/
-output/
+__pycache__/
 datasets/
 tflog/
 font/
 images/
 model_data/
 nb_images/
+output/
+pretrained-model/
 weights/
+data/
+models/
+deeplearningAIbooks/
+
